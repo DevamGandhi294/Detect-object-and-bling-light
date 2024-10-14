@@ -1,0 +1,41 @@
+#define trigPin 9
+#define echoPin 10
+#define relayPin 7
+
+long duration;
+int distance;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);  // Set the trigPin as an Output
+  pinMode(echoPin, INPUT);   // Set the echoPin as an Input
+  pinMode(relayPin, OUTPUT); // Set the relayPin as an Output
+  Serial.begin(9600);        // Begin Serial communication
+}
+
+void loop() {
+  // Clear the trigPin
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  // Set the trigPin HIGH for 10 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Read the echoPin and calculate the distance
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;  // Distance in cm
+
+  // Print the distance on Serial Monitor (Optional)
+  Serial.print("Distance: ");
+  Serial.println(distance);
+
+  // If an object is closer than 10 cm, turn the light ON
+  if (distance <= 10) {
+    digitalWrite(relayPin, LOW);  // LOW to turn ON the relay (Active LOW)
+  } else {
+    digitalWrite(relayPin, HIGH); // HIGH to turn OFF the relay
+  }
+
+  delay(500);  // Delay for stability
+}
